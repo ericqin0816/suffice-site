@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suffice | Coding agents, without the waste</title>
+  <meta name="description" content="Suffice picks the right model for each task, keeps context small, and checks the work before it calls it done. Same quality, a lot less spend.">
+  <meta property="og:title" content="Suffice | Coding agents, without the waste">
+  <meta property="og:description" content="41% lower cost per task at the same accuracy on SWE-bench Lite.">
+  <meta name="theme-color" content="#f7f7f5">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="wordmark" aria-label="Suffice home">[suffice]</a>
+    <nav class="nav-right">
+      <a href="#product" class="hide-sm">Product</a>
+      <a href="#benchmark" class="hide-sm">Benchmark</a>
+      <a href="#" data-link="docs">Docs</a>
+      <a href="download.html" class="btn btn-dark btn-sm" data-download data-short><span data-os-icon></span><span data-download-label>Download</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1 class="fade-up">Coding agents,<br>without the waste.</h1>
+      <p class="lede fade-up" style="--i:1">Suffice picks the right model for each task, keeps context small, and checks the work before it calls it done. Same quality, a lot less spend.</p>
+      <div class="actions fade-up" style="--i:2">
+        <a href="download.html" class="btn btn-dark" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
+        <a href="#benchmark" class="btn btn-light">See the benchmark</a>
+      </div>
+    </div>
+
+    <div class="container hero-shot fade-up" style="--i:3">
+      <div class="app" role="img" aria-label="The Suffice desktop app: a thread list on the left and a prompt box over a mosaic background">
+        <div class="app-grid">
+          <aside class="side">
+            <div class="side-top">
+              <span class="wordmark">[suffice]</span>
+              <span class="side-icons">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></svg>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M6 2.5v11"/></svg>
+              </span>
+            </div>
+            <div class="new-session"><span>+</span>New session</div>
+            <div class="side-label"><span>Threads</span><span>···</span></div>
+
+            <div class="group"><span class="chip-ico" style="background:#8ee5ad">A</span>acme-api<span class="count">2</span></div>
+            <div class="thread active">
+              <div class="thread-title"><span>Fix flaky session refresh test</span><time>now</time></div>
+              <div class="thread-meta"><span>⑂ main</span><span class="add">+42</span><span class="del">−11</span><span class="spin" id="threadSpin">⠋</span></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Rate limit the login route</span><time>5h</time></div>
+              <div class="thread-meta"><span>⑂ main</span><span class="ok">✓</span></div>
+            </div>
+
+            <div class="group"><span class="chip-ico" style="background:#85baff">S</span>suffice<span class="count">2</span></div>
+            <div class="thread">
+              <div class="thread-title"><span>Compact the benchmark report</span><time>20h</time></div>
+              <div class="thread-meta"><span>No Git</span><span class="ok">✓</span></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Cut cold start time</span><time>1d</time></div>
+              <div class="thread-meta"><span>⑂ perf</span><span class="add">+318</span><span class="del">−206</span><span class="ok">✓</span></div>
+            </div>
+
+            <div class="group"><span class="chip-ico" style="background:#c9a1ff">W</span>web<span class="count">2</span></div>
+            <div class="thread">
+              <div class="thread-title"><span>Migrate to the app router</span><time>4d</time></div>
+              <div class="thread-meta"><span>⑂ main</span><span class="add">+2307</span><span class="del">−94</span><span class="ok">✓</span></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Dark mode tokens</span><time>6d</time></div>
+              <div class="thread-meta"><span>⑂ design</span><span class="ok">✓</span></div>
+            </div>
+          </aside>
+
+          <div class="stage">
+            <canvas class="mosaic" id="mosaic" aria-hidden="true"></canvas>
+            <div class="win-ctl" aria-hidden="true"><i>–</i><i>□</i><i>×</i></div>
+            <div class="composer-wrap">
+              <div class="ctx"><span><span class="chip-ico" style="background:#8ee5ad">A</span>acme-api ×</span><span>⑂ main ⌄</span></div>
+              <div class="composer">
+                <div class="prompt placeholder" id="prompt">Ask Suffice to build features, fix bugs, or work on your code</div>
+                <div class="composer-bar">
+                  <span>+</span>
+                  <span class="hide-sm">◷ Full access</span>
+                  <span class="right"><span>◎ <b>Auto</b></span><span class="hide-sm">Balanced</span><span class="send" id="send">↑</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="benchmark">
+    <div class="container">
+      <div class="proof" data-reveal>
+        <div>
+          <div class="big"><span data-count="41">0</span>%</div>
+          <p>lower average cost per task<sup>1</sup></p>
+          <p class="method">$0.16 vs $0.27</p>
+        </div>
+        <div>
+          <div class="big"><span data-count="87.8" data-decimals="1">0</span>%</div>
+          <p>accuracy, vs 87.6% for Opus<sup>2</sup></p>
+          <p class="method">263.4 / 300 vs 262.8 / 300</p>
+        </div>
+        <div>
+          <div class="big"><span data-count="1500">0</span></div>
+          <p>graded runs on SWE-bench Lite</p>
+          <p class="method"><a class="u" href="https://suffice.work/method">300 tasks × 5 attempts · method</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="product">
+    <div class="container">
+      <div class="head" data-reveal>
+        <h2>Spend where it counts.</h2>
+        <p class="sub">Small tasks get small models. Hard ones get your best.</p>
+      </div>
+      <div class="grid-2">
+        <article class="feature" data-reveal>
+          <div class="shot" id="routeShot">
+            <div class="shot-label"><span>Routing · this session</span><span>Balanced</span></div>
+            <div class="route-row"><span>Rename userId across 12 files</span><span class="model" data-model="small · low">routing…</span></div>
+            <div class="route-row"><span>Fix race in the job queue</span><span class="model" data-model="large · high">routing…</span></div>
+            <div class="route-row"><span>Write tests for the parser</span><span class="model" data-model="mid · medium">routing…</span></div>
+            <div class="route-row"><span>Update the README</span><span class="model" data-model="small · low">routing…</span></div>
+            <div class="route-total"><span>4 tasks · 4 verified</span><b id="routeCost">$0.000</b></div>
+          </div>
+          <h3>The right model for every task.</h3>
+          <p>Suffice estimates how hard each step is, then picks the model and reasoning effort to match. No more flagship prices to rename a variable.</p>
+        </article>
+        <article class="feature" data-reveal style="--d:100ms">
+          <div class="shot" id="snetShot">
+            <div class="shot-label"><span>SNet · acme-api</span><span>3 agents</span></div>
+            <div class="msgs">
+              <div class="msg"><div class="msg-from">Claude Code · api thread</div>Changed the session response shape. Types need regenerating.</div>
+              <div class="msg right"><div class="msg-from">Suffice</div>Types regenerated. Handing the test run to Codex.</div>
+              <div class="msg"><div class="msg-from">Codex · tests thread</div>42 of 42 passing. Ready for review.</div>
+            </div>
+          </div>
+          <h3>Works with the agents you already use.</h3>
+          <p>SNet lets Claude Code, Codex, OpenCode and Suffice pass messages, context and handoffs, so you don't have to relay every update yourself.</p>
+        </article>
+      </div>
+
+      <div class="trio" data-reveal>
+        <div><h3>Bring your own key.</h3><p>Pay your provider directly. Suffice doesn't mark up tokens.</p></div>
+        <div><h3>Runs on your machine.</h3><p>Your code only goes to the model provider you pick.</p></div>
+        <div><h3>Checked before it's done.</h3><p>Changes are tested before a task is marked complete, with a receipt of what it cost.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container split">
+      <div data-reveal>
+        <h2>What's next.</h2>
+        <p class="note">Pressure and Cloud are in the works. Leave your email and we'll tell you when they open up.</p>
+        <form class="waitlist" novalidate>
+          <input type="email" name="email" placeholder="you@company.com" aria-label="Email address" required>
+          <button class="btn btn-dark" type="submit">Join the waitlist</button>
+        </form>
+        <p class="waitlist-msg" aria-live="polite"></p>
+      </div>
+      <div class="rows" data-reveal style="--d:100ms">
+        <div class="row"><h3>Suffice Pressure</h3><span class="tag">early access</span><p>Finds the edge cases your tests miss and turns each one into a test you can rerun.</p></div>
+        <div class="row"><h3>Suffice Cloud</h3><span class="tag">planned</span><p>Throwaway sandboxes with checkpoints and snapshots, for agents and the apps they build.</p></div>
+        <div class="row"><h3>Suffice Pro</h3><span class="tag">planned</span><p>Project memory across sessions, multi-agent orchestration, and every execution mode.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container split">
+      <div data-reveal>
+        <h2>A few things<br>you might be wondering.</h2>
+        <p class="note">More in the <a class="u" href="#" data-link="docs">docs</a>, or <a class="u" href="#" data-email>get in touch</a>.</p>
+      </div>
+      <div class="faq" data-reveal style="--d:100ms">
+        <details>
+          <summary>What is Suffice?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>A desktop coding agent. You describe a feature, bug or refactor, and Suffice plans it, writes the code, runs it and tests it, choosing models along the way so you don't overpay.</p>
+        </details>
+        <details>
+          <summary>Is it free?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>Yes. The app is free with your own API key. Paid features will come later, and we'll announce pricing before anything changes.</p>
+        </details>
+        <details>
+          <summary>Can I use my existing API keys?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>Yes. Add a key from your provider and you're billed by them at their normal rates. Whatever Suffice saves shows up on your own bill.</p>
+        </details>
+        <details>
+          <summary>Do I have to stop using Claude Code or Codex?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>No. SNet, in beta, connects them to Suffice and to each other so they can share context and hand off work.</p>
+        </details>
+        <details>
+          <summary>Where does my code go?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>The agent runs on your computer. Code is only sent to the model provider you configure, under your key.</p>
+        </details>
+        <details>
+          <summary>How was the 41% measured?<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 4.5l3 3 3-3"/></svg></summary>
+          <p>On our own run of SWE-bench Lite: 300 tasks, 5 attempts each, comparing Opus to Suffice (Golem). Average cost per task went from $0.27 to $0.16 with accuracy level. The full <a class="u" href="https://suffice.work/method">method</a> is public.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container" data-reveal>
+      <h2>Do more with enough.</h2>
+      <p>Free on Windows, macOS and Linux.</p>
+      <div class="actions">
+        <a href="download.html" class="btn btn-dark" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="footnotes">
+  <pre class="ascii" aria-hidden="true" data-ascii></pre>
+  <div class="container">
+    <p><sup>1</sup> From our own 5-attempt, 300-task SWE-bench Lite run comparing Opus to Suffice (Golem). Average cost per task: $0.16, down from $0.27 for Opus.</p>
+    <p><sup>2</sup> Suffice 263.4/300 (87.8% average over 5 trials) · Opus 262.8/300 (87.6% average over 5 trials). <a class="u" href="https://suffice.work/method">Benchmark method</a></p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="wordmark">[suffice]</a>
+        <p>Coding agents, without the waste.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="download.html">Download</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="download.html#changelog">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#" data-link="docs">Documentation</a>
+        <a href="#" data-link="security">Security</a>
+        <a href="#" data-email>Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#" data-link="privacy">Privacy</a>
+        <a href="#" data-link="terms">Terms</a>
+        <a href="#" data-link="eula">Software license</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> Suffice.</span>
+      <span>Independent project · not affiliated with Anthropic or OpenAI</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
