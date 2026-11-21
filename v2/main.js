@@ -13,7 +13,7 @@ const CONFIG = {
     'linux-deb': '#',
   },
   install: { npm: 'npm install -g suffice' },
-  links: { docs: '#', github: '#', security: '#', privacy: '#', terms: '#', eula: '#', checksums: '#' },
+  links: { docs: '#', security: '#', privacy: '#', terms: '#', eula: '#', checksums: '#' },
 };
 
 const $ = (s, el = document) => el.querySelector(s);
@@ -34,7 +34,7 @@ const watch = (el) => {
   return state;
 };
 
-/* ---------- Pixel helpers ---------- */
+/* ---------- Pixel math ---------- */
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16);
 const bayer = (x, y) => BAYER[(y & 3) * 4 + (x & 3)];
 const hash = (x, y) => {
@@ -53,154 +53,186 @@ const fbm = (x, y) => noise(x, y) * 0.5 + noise(x * 2.1, y * 2.1) * 0.3 + noise(
 const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * Math.max(0, Math.min(1, t)));
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 
-const fitCanvas = (canvas, px) => {
-  const w = Math.max(1, Math.ceil(canvas.clientWidth / px));
-  const h = Math.max(1, Math.ceil(canvas.clientHeight / px));
-  canvas.width = w;
-  canvas.height = h;
-  return [w, h];
+const PALETTE = [
+  '#0c151a', '#16303a', '#2f5559', '#0f2f47', '#164f73', '#1f7f9a', '#3cc0b0', '#cfeee6',
+  '#2a2724', '#5a5347', '#8c8270', '#1e3616', '#3f6a24', '#6f9a30', '#a9c94a', '#e6dc7a',
+  '#a48ee0', '#f0dc5a', '#dce6dc', '#f2c76e', '#c98a52', '#7a4e45', '#3a2c33',
+].map(hex);
+const nearest = (c) => {
+  let best = PALETTE[0], bd = Infinity;
+  for (const p of PALETTE) {
+    const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2;
+    if (d < bd) { bd = d; best = p; }
+  }
+  return best;
 };
 
-const loop = (canvas, fps, draw) => {
-  draw(0);
-  if (reduceMotion) return;
-  const vis = watch(canvas);
-  const t0 = performance.now();
-  (async () => { for (;;) { await vis.wait(1000 / fps); draw((performance.now() - t0) / 1000); } })();
+/* ---------- Scenes ---------- */
+const grass = (u, v, n, fine, sunX) => {
+  const sun = Math.max(0, 1 - Math.hypot(u - sunX, v) * 1.25);
+  const blade = 0.5 + 0.5 * Math.sin(u * 90 - v * 55 + n * 12);
+  let c = mix([30, 56, 22], [160, 194, 70], n * 0.85 + sun * 0.4 + (blade - 0.5) * 0.4);
+  c = mix(c, [228, 216, 110], sun * 0.45);
+  return c.map((x) => x * (0.78 + fine * 0.4));
 };
+const flower = (u, v) => (v > 0.4 && hash(u * 9973, v * 7919) > 0.986 ? (u < 0.45 ? [164, 142, 224] : [240, 220, 90]) : null);
 
-/* ---------- Dithered landscape, after the in-app background ---------- */
-function setupPixels() {
-  const canvas = $('#pixels');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const PALETTE = ['#0f2f47', '#164f73', '#1f7f9a', '#3cc0b0', '#cfeee6', '#2a2724', '#5a5347', '#8c8270', '#24401a', '#3f6a24', '#6f9a30', '#a9c94a', '#e6dc7a', '#9b84d8', '#f0dc5a'].map(hex);
-  const nearest = (c) => {
-    let best = PALETTE[0], bd = Infinity;
-    for (const p of PALETTE) {
-      const d = (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 + (p[2] - c[2]) ** 2;
-      if (d < bd) { bd = d; best = p; }
-    }
-    return best;
-  };
-  const colorAt = (u, v) => {
+const SCENES = {
+  // Looking down at a coastline, like the in-app background.
+  coast(u, v) {
     const n = fbm(u * 5, v * 5), n2 = fbm(u * 22 + 3, v * 22 + 7), fine = fbm(u * 60, v * 60);
     const d = v - (0.78 - 1.25 * u + (n - 0.5) * 0.28);
     if (d < -0.045) return { sea: true, c: mix([70, 204, 190], [16, 60, 96], -d / 0.6).map((x) => x * (0.8 + fine * 0.4)) };
     if (d < 0.07) return { c: mix([42, 39, 36], [150, 140, 116], n2 * 0.8 + fine * 0.5) };
-    if (v > 0.4 && hash(u * 9973, v * 7919) > 0.986) return { c: u < 0.45 ? [155, 132, 216] : [240, 220, 90], fixed: true };
-    const sun = Math.max(0, 1 - Math.hypot(u - 0.95, v) * 1.25);
-    const blade = 0.5 + 0.5 * Math.sin(u * 90 - v * 55 + n * 12);
-    let c = mix([34, 62, 24], [160, 194, 70], n * 0.85 + sun * 0.4 + (blade - 0.5) * 0.4);
-    c = mix(c, [228, 216, 110], sun * 0.45);
-    return { c: c.map((x) => x * (0.78 + fine * 0.4)) };
-  };
+    const f = flower(u, v);
+    return f ? { c: f, fixed: true } : { c: grass(u, v, n, fine, 0.95) };
+  },
+  // A hill over the sea at dusk.
+  hill(u, v) {
+    const n = fbm(u * 4 + 9, v * 4), fine = fbm(u * 60 + 5, v * 60);
+    const horizon = 0.42;
+    const top = 0.6 + 0.13 * Math.sin(u * 3.2 + 1.2) + (n - 0.5) * 0.08;
+    if (v < horizon) {
+      if (v < 0.3 && hash(u * 4999, v * 3001) > 0.994) return { c: [220, 230, 220], fixed: true };
+      let c = mix([12, 20, 26], [56, 96, 96], Math.pow(v / horizon, 1.6));
+      const glow = Math.max(0, 1 - Math.hypot((u - 0.7) * 1.4, (v - 0.36) * 2.6) * 2.2);
+      c = mix(c, [122, 78, 69], glow * 1.6);
+      c = mix(c, [201, 138, 82], (glow - 0.3) * 2);
+      return { c: mix(c, [244, 206, 120], (glow - 0.55) * 2.6) };
+    }
+    if (v < top) return { sea: true, c: mix([46, 140, 140], [16, 54, 80], (v - horizon) / 0.3).map((x) => x * (0.85 + fine * 0.3)) };
+    const f = flower(u, v);
+    return f ? { c: f, fixed: true } : { c: grass(u, v, n, fine, 0.7).map((x) => x * 0.9) };
+  },
+};
 
-  let w = 0, h = 0, base = [], img = null;
+function setupScene(canvas) {
+  const ctx = canvas.getContext('2d');
+  const colorAt = SCENES[canvas.dataset.scene] || SCENES.coast;
+  const PX = 4;
+  let w = 0, h = 0, cells = [], frame = null, img = null, level = reduceMotion ? 1 : 16;
+
   const build = () => {
-    [w, h] = fitCanvas(canvas, 4);
+    w = Math.max(1, Math.ceil(canvas.clientWidth / PX));
+    h = Math.max(1, Math.ceil(canvas.clientHeight / PX));
+    canvas.width = w;
+    canvas.height = h;
     img = ctx.createImageData(w, h);
-    base = [];
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) base.push(colorAt(x / w, y / h));
-  };
-  const draw = (t) => {
-    if (!img) return;
-    const data = img.data;
+    frame = new Uint8ClampedArray(w * h * 3);
+    cells = [];
     for (let y = 0, i = 0; y < h; y++) {
       for (let x = 0; x < w; x++, i++) {
-        const b = base[i];
-        let c = b.c;
-        if (b.sea) {
-          const s = Math.sin(x * 0.35 + y * 0.9 - t * 1.6) * 0.5 + Math.sin(x * 0.12 - y * 0.4 + t * 0.9) * 0.5;
-          c = c.map((v) => v + s * 26);
-        }
-        const p = b.fixed ? c : nearest(c.map((v) => v + (bayer(x, y) - 0.5) * 56));
-        data[i * 4] = p[0]; data[i * 4 + 1] = p[1]; data[i * 4 + 2] = p[2]; data[i * 4 + 3] = 255;
+        const cell = colorAt(x / w, y / h);
+        cells.push(cell);
+        const p = cell.fixed ? cell.c : nearest(cell.c.map((v) => v + (bayer(x, y) - 0.5) * 56));
+        frame.set(p, i * 3);
+      }
+    }
+  };
+  const shimmer = (t) => {
+    for (let y = 0, i = 0; y < h; y++) {
+      for (let x = 0; x < w; x++, i++) {
+        const cell = cells[i];
+        if (!cell.sea) continue;
+        const s = Math.sin(x * 0.35 + y * 0.9 - t * 1.6) * 0.5 + Math.sin(x * 0.12 - y * 0.4 + t * 0.9) * 0.5;
+        frame.set(nearest(cell.c.map((v) => v + s * 26 + (bayer(x, y) - 0.5) * 56)), i * 3);
+      }
+    }
+  };
+  const paint = () => {
+    const d = img.data, b = level;
+    for (let y = 0; y < h; y++) {
+      const sy = Math.min(h - 1, y - (y % b) + (b >> 1));
+      for (let x = 0; x < w; x++) {
+        const sx = Math.min(w - 1, x - (x % b) + (b >> 1));
+        const s = (sy * w + sx) * 3, o = (y * w + x) * 4;
+        d[o] = frame[s]; d[o + 1] = frame[s + 1]; d[o + 2] = frame[s + 2]; d[o + 3] = 255;
       }
     }
     ctx.putImageData(img, 0, 0);
   };
+
   build();
+  paint();
   let rt;
-  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { build(); draw(0); }, 150); });
-  loop(canvas, 10, draw);
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { build(); paint(); }, 150); });
+  if (reduceMotion) return;
+
+  const vis = watch(canvas);
+  onVisible(canvas, async () => {
+    for (const b of [16, 8, 4, 2, 1]) { level = b; paint(); await sleep(130); }
+    const t0 = performance.now();
+    for (;;) { await vis.wait(100); shimmer((performance.now() - t0) / 1000); paint(); }
+  }, 0.25);
 }
 
-/* ---------- Striped pixel band ---------- */
-function setupStripes() {
-  const canvas = $('#stripes');
+/* ---------- Pixel wordmark ---------- */
+function setupWordmark() {
+  const canvas = $('#wordmark');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const lo = [44, 54, 18], hi = hex('#c8f05a');
-  let w = 0, h = 0;
-  const build = () => { [w, h] = fitCanvas(canvas, 3); };
+  const RAMP = ['#1f7f9a', '#3cc0b0', '#3f6a24', '#6f9a30', '#a9c94a', '#c8f05a'].map(hex);
+  let mask = [], w = 0, h = 0;
+  const build = () => {
+    const font = '16px Silkscreen, monospace';
+    ctx.font = font;
+    w = Math.ceil(ctx.measureText('[suffice]').width) + 2;
+    h = 18;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.font = font;
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#fff';
+    ctx.fillText('[suffice]', 1, 1);
+    const a = ctx.getImageData(0, 0, w, h).data;
+    mask = [];
+    for (let i = 0; i < w * h; i++) if (a[i * 4 + 3] > 110) mask.push(i);
+    draw(0);
+  };
   const draw = (t) => {
     ctx.clearRect(0, 0, w, h);
-    for (let x = 0; x < w; x += 2) {
-      const wave = 0.5 + 0.5 * Math.sin(x * 0.045 - t * 1.4);
-      const amp = 0.25 + 0.75 * wave * (0.55 + 0.45 * noise(x * 0.06, t * 0.4));
-      for (let y = 0; y < h; y++) {
-        const dy = Math.abs(y / h - 0.5) * 2;
-        const k = amp - dy;
-        if (k <= 0 || bayer(x >> 1, y) > k * 2.2) continue;
-        const c = mix(lo, hi, Math.min(1, k * 1.6) * (0.4 + wave * 0.6));
-        ctx.fillStyle = `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
-        ctx.fillRect(x, y, 1, 1);
-      }
+    for (const i of mask) {
+      const x = i % w, y = (i / w) | 0;
+      const k = (x / w) * (RAMP.length - 1) + (bayer(x, y) - 0.5) * 1.2 + Math.sin(x * 0.2 - t * 2) * 0.35;
+      const c = RAMP[Math.max(0, Math.min(RAMP.length - 1, Math.round(k)))];
+      ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
+      ctx.fillRect(x, y, 1, 1);
     }
   };
-  build();
-  addEventListener('resize', build);
-  loop(canvas, 12, draw);
+  (document.fonts?.load('16px Silkscreen') || Promise.resolve()).then(build, build);
+  if (reduceMotion) return;
+  const vis = watch(canvas);
+  const t0 = performance.now();
+  (async () => { for (;;) { await vis.wait(160); if (mask.length) draw((performance.now() - t0) / 1000); } })();
 }
 
-/* ---------- Grass dissolving into the footer ---------- */
-function setupDissolve() {
-  const canvas = $('#dissolve');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const RAMP = ['#1b2a12', '#24401a', '#3f6a24', '#6f9a30', '#a9c94a'].map(hex);
-  let w = 0, h = 0;
-  const build = () => { [w, h] = fitCanvas(canvas, 4); };
-  const draw = (t) => {
-    ctx.clearRect(0, 0, w, h);
-    for (let y = 0; y < h; y++) {
-      const v = y / (h - 1);
-      for (let x = 0; x < w; x++) {
-        const n = noise(x * 0.06 + t * 0.15, y * 0.12);
-        const k = v * v * 1.15 + (n - 0.5) * 0.35;
-        if (bayer(x, y) > k) continue;
-        const c = RAMP[Math.min(RAMP.length - 1, Math.floor((k + hash(x, y) * 0.25) * RAMP.length * 0.85))];
-        ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
-        ctx.fillRect(x, y, 1, 1);
-      }
-    }
-  };
-  build();
-  addEventListener('resize', build);
-  loop(canvas, 6, draw);
-}
-
-/* ---------- 8×8 pixel icons ---------- */
-const ICON_BITMAPS = {
+/* ---------- 8×8 icons and sprites ---------- */
+const BITMAPS = {
   chat: ['........', '.######.', '.#....#.', '.#....#.', '.######.', '.##.....', '.#......', '........'],
   fork: ['.#...#..', '.#...#..', '.#...#..', '.#..#...', '.###....', '.#......', '.#......', '.#......'],
   file: ['.####...', '.#..##..', '.#...##.', '.#....#.', '.#.##.#.', '.#....#.', '.######.', '........'],
   check: ['........', '......#.', '.....##.', '#...##..', '##.##...', '.###....', '..#.....', '........'],
-  bars: ['........', '......#.', '......#.', '...#..#.', '...#..#.', '#..#..#.', '#..#..#.', '........'],
-  msgs: ['#####...', '#...#...', '#####...', '#.......', '...#####', '...#...#', '...#####', '.......#'],
+  key: ['........', '.##.....', '#..#....', '#..#####', '.##..#.#', '........', '........', '........'],
+  laptop: ['........', '.######.', '.#....#.', '.#....#.', '.######.', '########', '........', '........'],
+  receipt: ['.######.', '.#....#.', '.#.##.#.', '.#....#.', '.#.##.#.', '.#....#.', '.#.#.##.', '..#.#...'],
+  lock: ['..####..', '.#....#.', '.#....#.', '########', '###..###', '###..###', '########', '........'],
+  unlock: ['..####..', '.#....#.', '.#......', '########', '###..###', '###..###', '########', '........'],
+  gear: ['...##...', '.#.##.#.', '..####..', '###..###', '###..###', '..####..', '.#.##.#.', '...##...'],
+  search: ['..###...', '.#...#..', '.#...#..', '.#...#..', '..###...', '.....#..', '......#.', '.......#'],
+  panel: ['########', '#..#...#', '#..#...#', '#..#...#', '#..#...#', '#..#...#', '########', '........'],
   term: ['########', '#......#', '#.#....#', '#..#...#', '#.#.##.#', '#......#', '########', '........'],
 };
+const SPRITE = ['..#..#..', '...##...', '..####..', '.#.##.#.', '########', '#.####.#', '#.#..#.#', '...##...'];
+const paintBitmap = (canvas, rows, color) => {
+  canvas.width = 8;
+  canvas.height = 8;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = color;
+  rows.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') ctx.fillRect(x, y, 1, 1); }));
+};
 function setupIcons() {
-  $$('canvas[data-icon]').forEach((c) => {
-    const rows = ICON_BITMAPS[c.dataset.icon];
-    if (!rows) return;
-    c.width = 8;
-    c.height = 8;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#dcdcdc';
-    rows.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') ctx.fillRect(x, y, 1, 1); }));
-  });
+  $$('canvas[data-icon]').forEach((c) => { const b = BITMAPS[c.dataset.icon]; if (b) paintBitmap(c, b, getComputedStyle(c).color); });
+  $$('canvas[data-sprite]').forEach((c) => paintBitmap(c, SPRITE, c.dataset.sprite));
 }
 
 /* ---------- Content, OS detection ---------- */
@@ -243,18 +275,34 @@ function setupContent() {
   $$('[data-year]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 }
 
+function setupProgress() {
+  const bar = $('#progress');
+  if (!bar) return;
+  const segs = Array.from({ length: 64 }, () => bar.appendChild(document.createElement('i')));
+  let ticking = false;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const lit = Math.round((max > 0 ? scrollY / max : 0) * segs.length);
+    segs.forEach((s, i) => s.classList.toggle('on', i < lit));
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  addEventListener('resize', update);
+  update();
+}
+
 function countUp(el) {
   const end = parseFloat(el.dataset.count);
   const dec = Number(el.dataset.decimals || 0);
   const fmt = (v) => v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
   if (reduceMotion) { el.textContent = fmt(end); return; }
-  const t0 = performance.now();
-  const step = (now) => {
-    const p = Math.min(1, (now - t0) / 1400);
-    el.textContent = fmt(end * (1 - Math.pow(1 - p, 3)));
-    if (p < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
+  const STEPS = 18;
+  let i = 0;
+  const timer = setInterval(() => {
+    i++;
+    el.textContent = fmt(end * (1 - Math.pow(1 - i / STEPS, 2)));
+    if (i >= STEPS) clearInterval(timer);
+  }, 55);
 }
 
 function setupReveal() {
@@ -262,24 +310,50 @@ function setupReveal() {
   $$('[data-count]').forEach((el) => onVisible(el, countUp, 0.6));
 }
 
+/* ---------- The "enough" meter ---------- */
+function setupMeter() {
+  const meter = $('#meter');
+  if (!meter) return;
+  const rows = $$('.segs', meter).map((s) => ({
+    target: Number(s.dataset.fill),
+    cells: Array.from({ length: 50 }, () => s.appendChild(document.createElement('i'))),
+  }));
+  const flag = $('.flag', meter);
+  const fill = (n) => rows.forEach((r) => r.cells.forEach((c, i) => c.classList.toggle('on', i < Math.min(n, r.target))));
+  if (reduceMotion) { fill(50); flag.classList.add('show'); return; }
+  onVisible(meter, async () => {
+    for (let n = 1; n <= 50; n++) {
+      fill(n);
+      if (n === rows[1].target) flag.classList.add('show');
+      await sleep(n <= rows[1].target ? 34 : 26);
+    }
+  }, 0.4);
+}
+
+/* ---------- Checklist ---------- */
+function setupQuests() {
+  const box = $('#quests');
+  if (!box) return;
+  const tags = $$('.quest .tag', box);
+  const set = (tag, state) => {
+    tag.className = `tag${state === 'done' ? ' on' : state === 'running' ? ' run' : ''}`;
+    tag.textContent = state;
+  };
+  if (reduceMotion) { tags.forEach((t) => set(t, 'done')); return; }
+  const vis = watch(box);
+  (async () => {
+    for (;;) {
+      tags.forEach((t) => set(t, 'queued'));
+      await vis.wait(900);
+      for (const t of tags) { set(t, 'running'); await vis.wait(1100); set(t, 'done'); await vis.wait(200); }
+      await vis.wait(4000);
+    }
+  })();
+}
+
 /* ---------- App mock ---------- */
 function setupComposer() {
   const prompt = $('#prompt');
-  const spark = $('#spark');
-  if (spark) {
-    const bars = Array.from({ length: 28 }, () => { const i = document.createElement('i'); spark.appendChild(i); return i; });
-    let o = 0;
-    const tick = () => {
-      bars.forEach((b, i) => {
-        const v = 0.25 + 0.75 * noise((i + o) * 0.35, 1.7);
-        b.style.height = `${Math.round(v * 4) * 25}%`;
-        b.classList.toggle('on', i > bars.length - 6);
-      });
-      o++;
-    };
-    tick();
-    if (!reduceMotion) setInterval(tick, 700);
-  }
   if (!prompt || reduceMotion) return;
   const send = $('#send');
   const PLACEHOLDER = prompt.textContent;
@@ -292,7 +366,7 @@ function setupComposer() {
   const vis = watch(prompt);
   (async () => {
     for (let p = 0; ; p = (p + 1) % PROMPTS.length) {
-      await vis.wait(1600);
+      await vis.wait(1800);
       prompt.classList.remove('placeholder');
       prompt.innerHTML = '<span></span><span class="caret"></span>';
       const out = prompt.firstChild;
@@ -309,18 +383,18 @@ function setupComposer() {
 function setupRouting() {
   const shot = $('#routeShot');
   if (!shot) return;
+  const NAMES = { s: 'small', m: 'mid', l: 'large' };
+  const COSTS = [0.004, 0.061, 0.018, 0.002];
   const rows = $$('.route', shot).map((r) => {
-    const blocks = $('.blocks', r);
-    const cells = Array.from({ length: 10 }, () => { const i = document.createElement('i'); blocks.appendChild(i); return i; });
-    return { model: $('.model', r), cells };
+    const pips = $('.pips', r);
+    return { tier: $('.tier', r), effort: Number(pips.dataset.effort), cells: Array.from({ length: 10 }, () => pips.appendChild(document.createElement('i'))) };
   });
   const total = $('#routeCost');
-  const COSTS = [0.004, 0.061, 0.018, 0.002];
   const set = (row, on) => {
-    row.model.textContent = on ? row.model.dataset.model : 'routing…';
-    row.model.classList.toggle('set', on);
-    const effort = on ? Number(row.model.dataset.effort) : 0;
-    row.cells.forEach((c, i) => c.classList.toggle('on', i < effort));
+    const t = row.tier.dataset.tier;
+    row.tier.textContent = on ? NAMES[t] : '· · ·';
+    row.tier.className = `tier px-sm px${on ? ` ${t}` : ''}`;
+    row.cells.forEach((c, i) => c.classList.toggle('on', on && i < row.effort));
   };
   if (reduceMotion) {
     rows.forEach((r) => set(r, true));
@@ -367,7 +441,7 @@ function setupCopy() {
       await navigator.clipboard.writeText($('code', b.parentElement).textContent);
       b.textContent = 'Copied';
     } catch {
-      b.textContent = 'Press Ctrl+C';
+      b.textContent = 'Ctrl+C';
     }
     setTimeout(() => { b.textContent = 'Copy'; }, 1500);
   }));
@@ -396,11 +470,13 @@ function setupWaitlist() {
 }
 
 setupContent();
+setupProgress();
 setupReveal();
 setupIcons();
-setupPixels();
-setupStripes();
-setupDissolve();
+$$('canvas[data-scene]').forEach(setupScene);
+setupWordmark();
+setupMeter();
+setupQuests();
 setupComposer();
 setupRouting();
 setupMessages();

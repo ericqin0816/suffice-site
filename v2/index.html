@@ -7,7 +7,7 @@
   <meta name="description" content="Suffice picks the right model for every task, keeps context small, and tests the work before it hands it back. Same accuracy, 41% less spend.">
   <meta property="og:title" content="Suffice | Coding agents that know when it's enough">
   <meta property="og:description" content="41% lower cost per task at the same accuracy on SWE-bench Lite.">
-  <meta name="theme-color" content="#101010">
+  <meta name="theme-color" content="#0b0d0b">
   <link rel="icon" href="logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,83 +18,90 @@
 <body>
 
 <header class="nav">
-  <div class="inner">
-    <a href="index.html" class="brand"><img src="logo.svg" alt="">Suffice</a>
+  <div class="container nav-inner">
+    <a href="index.html" class="brand"><img src="logo.svg" alt="">suffice</a>
     <nav class="nav-links">
-      <a href="#product">Product</a>
       <a href="#benchmark">Benchmark</a>
+      <a href="#how">How it works</a>
+      <a href="#next">Roadmap</a>
       <a href="download.html#changelog">Changelog</a>
-      <a href="#" data-link="docs">Docs</a>
     </nav>
     <div class="nav-right">
-      <a href="#" data-link="github" class="hide-sm">GitHub</a>
-      <a href="download.html" class="btn btn-white btn-sm" data-download><span data-os-icon></span><span data-download-label>Download</span></a>
+      <a href="#" data-link="docs" class="hide-sm">Docs</a>
+      <a href="download.html" class="btn btn-lime btn-sm px" data-download><span data-os-icon></span><span data-download-label>Download</span></a>
     </div>
   </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
 </header>
 
 <main>
-  <section class="band hero">
-    <div class="inner hero-top"></div>
-  </section>
-  <section class="band">
-    <div class="inner badge-row">
-      <span class="x tl"></span><span class="x tr"></span>
-      <a class="badge fade-up" href="#snet"><b>NEW</b>SNet beta: let Claude Code and Codex talk to each other →</a>
-    </div>
-  </section>
-  <section class="band hero">
-    <div class="inner">
-      <h1 class="fade-up" style="--i:1">Coding agents that know<br>when it's enough.</h1>
-    </div>
-  </section>
-  <section class="band">
-    <div class="inner hero-split">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="fade-up" style="--i:2"><p>Suffice picks the right model for every task, keeps context small, and tests the work before it hands it back. Same accuracy, 41% less spend.</p></div>
-      <div class="fade-up" style="--i:3">
-        <div class="actions">
-          <a href="download.html" class="btn btn-white" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
-          <a href="#benchmark" class="btn btn-grey">See the benchmark</a>
+  <section class="hero">
+    <div class="container">
+      <span class="label pop">v<span data-version>0.1.0</span> · public preview</span>
+      <h1 class="pop" style="--i:1">Coding agents that know<br>when it's <span class="nw">enough.<span class="pcaret" aria-hidden="true"></span></span></h1>
+      <div class="hero-row pop" style="--i:2">
+        <p>Suffice picks the right model for every task, keeps context small, and tests the work before it hands it back. Same accuracy, 41% less spend.<sup>1</sup></p>
+        <div>
+          <div class="actions">
+            <a href="download.html" class="btn btn-lime px" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
+            <a href="#benchmark" class="btn btn-dark px">See the benchmark</a>
+          </div>
+          <p class="meta">Free · Your own key · Win / Mac / Linux</p>
         </div>
-        <p class="or">or <a class="u" href="download.html#cli">install the CLI with npm</a></p>
       </div>
-    </div>
-  </section>
 
-  <div class="hatch"></div>
-
-  <section class="band">
-    <div class="inner shot-band">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="app fade-up" style="--i:4" role="img" aria-label="The Suffice desktop app with a thread list and a prompt box over pixel art">
+      <div class="app px px-lg pop" style="--i:3" role="img" aria-label="The Suffice desktop app: a thread list beside a prompt box over a pixel-art landscape">
         <div class="app-grid">
           <aside class="side">
-            <div class="lights"><i style="background:#e5534b"></i><i style="background:#d9a43c"></i><i style="background:#57ab5a"></i></div>
-            <div class="ws"><img src="logo.svg" alt=""><div>Suffice<small>acme-api</small></div></div>
-            <div class="search"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>Search</div>
-            <div class="nav-item"><span>+</span>New thread</div>
-            <div class="nav-item on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h8"/></svg>Threads</div>
-            <div class="nav-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M6 6h4M6 9h4"/></svg>Receipts</div>
-            <div class="nav-item"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4" cy="8" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="12" cy="12" r="2"/><path d="M6 7l4-2M6 9l4 2"/></svg>SNet</div>
-            <div class="side-label">Recent</div>
-            <div class="thread"><i class="pdot run"></i><span>Fix flaky session refresh test</span></div>
-            <div class="thread"><i class="pdot"></i><span>Rate limit the login route</span></div>
-            <div class="thread"><i class="pdot"></i><span>Cut cold start time</span></div>
-            <div class="thread"><i class="pdot"></i><span>Migrate to the app router</span></div>
-            <div class="thread"><i class="pdot idle"></i><span>Dark mode tokens</span></div>
-            <div class="side-foot">
-              <b>3</b> agents running · <b id="spendNow">$0.031</b> today
-              <div class="spark" id="spark"></div>
+            <div class="side-top">
+              <span class="brand"><img src="logo.svg" alt="">suffice</span>
+              <span class="side-icons"><canvas data-icon="gear"></canvas><canvas data-icon="search"></canvas><canvas data-icon="panel"></canvas></span>
+            </div>
+            <div class="new-session px"><span>+</span>New session</div>
+            <div class="side-label"><span>Threads</span><span>···</span></div>
+
+            <div class="group"><i class="sq" style="background:#8ee5ad"></i>acme-api<span class="count">2</span></div>
+            <div class="thread active px-sm px">
+              <div class="thread-title"><span>Fix flaky session refresh test</span><time>now</time></div>
+              <div class="thread-meta"><span>main</span><span class="add">+42</span><span class="del">−11</span><i class="run"></i></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Rate limit the login route</span><time>5h</time></div>
+              <div class="thread-meta"><span>main</span><i class="ok"></i></div>
+            </div>
+
+            <div class="group"><i class="sq" style="background:#85baff"></i>suffice<span class="count">2</span></div>
+            <div class="thread">
+              <div class="thread-title"><span>Compact the benchmark report</span><time>20h</time></div>
+              <div class="thread-meta"><span>No Git</span><i class="ok"></i></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Cut cold start time</span><time>1d</time></div>
+              <div class="thread-meta"><span>perf</span><span class="add">+318</span><span class="del">−206</span><i class="ok"></i></div>
+            </div>
+
+            <div class="group"><i class="sq" style="background:#a48ee0"></i>web<span class="count">2</span></div>
+            <div class="thread">
+              <div class="thread-title"><span>Migrate to the app router</span><time>4d</time></div>
+              <div class="thread-meta"><span>main</span><span class="add">+2307</span><span class="del">−94</span><i class="ok"></i></div>
+            </div>
+            <div class="thread">
+              <div class="thread-title"><span>Dark mode tokens</span><time>6d</time></div>
+              <div class="thread-meta"><span>design</span><i class="ok"></i></div>
             </div>
           </aside>
-          <div class="stage">
-            <canvas class="pixels" id="pixels" aria-hidden="true"></canvas>
+
+          <div class="stage px">
+            <canvas id="heroScene" data-scene="coast" aria-hidden="true"></canvas>
             <div class="composer-wrap">
-              <div class="composer">
-                <div class="composer-top"><span>▣ acme-api</span><span>⑂ main</span><span class="right hide-sm">Balanced mode</span></div>
-                <div class="prompt placeholder" id="prompt">Describe the task…</div>
-                <div class="composer-bar"><span>+</span><span>◎ <b>Auto</b> · routed per step</span><span class="send" id="send">↑</span></div>
+              <div class="ctx"><span class="px-sm px"><i class="sq" style="background:#8ee5ad"></i>acme-api ×</span><span class="px-sm px">main ⌄</span></div>
+              <div class="composer px">
+                <div class="prompt placeholder" id="prompt">Ask Suffice to build features, fix bugs, or work on your code</div>
+                <div class="composer-bar">
+                  <span>+</span>
+                  <span class="hide-sm">Full access</span>
+                  <span class="right"><span><b>Auto</b> · routed</span><span class="hide-sm">Balanced</span><span class="send px-sm px" id="send">↑</span></span>
+                </div>
               </div>
             </div>
           </div>
@@ -103,213 +110,196 @@
     </div>
   </section>
 
-  <div class="hatch"></div>
-
-  <section class="band" id="product">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="sec-head" data-reveal>
-        <h2>From prompt to verified change<br>in four steps.</h2>
-        <p>Suffice handles everything between asking for a change and merging it.</p>
+  <section class="section" id="benchmark">
+    <div class="container">
+      <div class="head" data-reveal>
+        <span class="label">01 · Benchmark</span>
+        <h2>Stops at enough.</h2>
+        <p>Same tasks, same accuracy. Suffice just stops spending sooner.</p>
       </div>
-      <div class="steps" data-reveal>
-        <div class="step">
-          <div class="step-top"><span class="ico"><canvas data-icon="chat"></canvas></span><span class="num">01</span></div>
-          <h3>Describe the task</h3>
-          <p>Open a repo and say what you want. A bug, a feature, a refactor.</p>
-          <a class="link" href="#" data-link="docs">Getting started →</a>
+      <div class="meter px px-lg" id="meter" data-reveal>
+        <div class="m-row">
+          <span>Opus</span>
+          <div class="segs them" data-fill="50"></div>
+          <b>$0.27 / task</b>
         </div>
-        <div class="step">
-          <div class="step-top"><span class="ico"><canvas data-icon="fork"></canvas></span><span class="num">02</span></div>
-          <h3>Route it</h3>
-          <p>Suffice gauges how hard each step is and picks the model, effort and budget to match.</p>
-          <a class="link" href="#routing">Routing →</a>
+        <div class="m-row">
+          <span>Suffice</span>
+          <div class="segs us" data-fill="30"><span class="flag" style="--at:calc(60% - 1px)">ENOUGH</span></div>
+          <b>$0.16 / task</b>
         </div>
-        <div class="step">
-          <div class="step-top"><span class="ico"><canvas data-icon="file"></canvas></span><span class="num">03</span></div>
-          <h3>Build with less context</h3>
-          <p>Only the files that matter get read, so your tokens go to the work itself.</p>
-          <a class="link" href="#benchmark">Savings →</a>
+        <div class="m-foot"><span>SWE-bench Lite · 300 tasks × 5 attempts · our own run<sup>1</sup></span><a href="https://suffice.work/method">Benchmark method →</a></div>
+      </div>
+      <div class="tiles" data-reveal>
+        <div class="tile px"><b class="lime"><span data-count="41">0</span>%</b><span>lower cost per task</span></div>
+        <div class="tile px"><b><span data-count="87.8" data-decimals="1">0</span>%</b><span>Suffice accuracy</span></div>
+        <div class="tile px"><b><span data-count="87.6" data-decimals="1">0</span>%</b><span>Opus accuracy</span></div>
+        <div class="tile px"><b><span data-count="1500">0</span></b><span>graded runs</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="container split">
+      <div class="sticky" data-reveal>
+        <span class="label">02 · How it works</span>
+        <h2>Four steps.<br>Then it stops.</h2>
+        <p>Every task runs the same loop, and spending ends once the work is checked.</p>
+      </div>
+      <div class="quests px px-lg" id="quests" data-reveal>
+        <div class="quest">
+          <span class="qicon px"><canvas data-icon="chat"></canvas></span>
+          <div><h3><span class="qn">01</span>Describe the task</h3><p>Open a repo and say what you want. A bug, a feature, a refactor.</p></div>
+          <span class="tag">queued</span>
         </div>
-        <div class="step">
-          <div class="step-top"><span class="ico"><canvas data-icon="check"></canvas></span><span class="num">04</span></div>
-          <h3>Verify and hand back</h3>
-          <p>Your tests run before anything is marked done. You get the diff and a receipt.</p>
-          <a class="link" href="#" data-link="docs">Receipts →</a>
+        <div class="quest">
+          <span class="qicon px"><canvas data-icon="fork"></canvas></span>
+          <div><h3><span class="qn">02</span>Route it</h3><p>Suffice gauges how hard each step is and picks the model, effort and budget to match.</p></div>
+          <span class="tag">queued</span>
+        </div>
+        <div class="quest">
+          <span class="qicon px"><canvas data-icon="file"></canvas></span>
+          <div><h3><span class="qn">03</span>Build with less context</h3><p>Only the files that matter get read, so your tokens go to the work itself.</p></div>
+          <span class="tag">queued</span>
+        </div>
+        <div class="quest">
+          <span class="qicon px"><canvas data-icon="check"></canvas></span>
+          <div><h3><span class="qn">04</span>Verify and hand back</h3><p>Your tests run before anything is marked done. You get the diff and a receipt of what it cost.</p></div>
+          <span class="tag">queued</span>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="band pixel-band">
-    <canvas id="stripes" aria-hidden="true"></canvas>
-    <h2 data-reveal>Spend where it counts.</h2>
-  </section>
-
-  <section class="band" id="routing">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="row">
-        <div class="row-text" data-reveal>
-          <span class="ico"><canvas data-icon="fork"></canvas></span>
-          <h3>The right model<br>for every task.</h3>
-          <p>Small jobs go to small models. Hard ones get your strongest. Suffice decides step by step, so you stop paying flagship prices to rename a variable.</p>
-          <a class="link" href="#" data-link="docs">How routing works →</a>
-        </div>
-        <div class="row-shot" data-reveal style="--d:100ms">
-          <div class="mock" id="routeShot">
-            <div class="mock-head"><b>Routing · acme-api</b><span>balanced</span></div>
-            <div class="mock-body">
-              <div class="route"><span>Rename userId across 12 files</span><span class="model" data-model="small · low" data-effort="2">routing…</span><span class="blocks"></span></div>
-              <div class="route"><span>Fix race in the job queue</span><span class="model" data-model="large · high" data-effort="8">routing…</span><span class="blocks"></span></div>
-              <div class="route"><span>Write tests for the parser</span><span class="model" data-model="mid · medium" data-effort="5">routing…</span><span class="blocks"></span></div>
-              <div class="route"><span>Update the README</span><span class="model" data-model="small · low" data-effort="1">routing…</span><span class="blocks"></span></div>
-            </div>
-            <div class="mock-foot"><span>4 tasks · 4 verified</span><b id="routeCost">$0.000</b></div>
+  <section class="section" id="inside">
+    <div class="container">
+      <div class="head" data-reveal>
+        <span class="label">03 · Inside</span>
+        <h2>Spend where it counts.</h2>
+        <p>Small jobs get small models. Hard ones get your best. And your agents finally talk to each other.</p>
+      </div>
+      <div class="grid-2">
+        <article class="card px px-lg" data-reveal>
+          <div class="mock px" id="routeShot">
+            <div class="mock-head"><span>Routing · acme-api</span><span>Balanced</span></div>
+            <div class="route px-sm px"><span>Rename userId across 12 files</span><span class="tier px-sm px" data-tier="s">· · ·</span><span class="pips" data-effort="2"></span></div>
+            <div class="route px-sm px"><span>Fix race in the job queue</span><span class="tier px-sm px" data-tier="l">· · ·</span><span class="pips" data-effort="8"></span></div>
+            <div class="route px-sm px"><span>Write tests for the parser</span><span class="tier px-sm px" data-tier="m">· · ·</span><span class="pips" data-effort="5"></span></div>
+            <div class="route px-sm px"><span>Update the README</span><span class="tier px-sm px" data-tier="s">· · ·</span><span class="pips" data-effort="1"></span></div>
+            <div class="route-total"><span>4 tasks · 4 verified</span><b id="routeCost">$0.000</b></div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="hatch"></div>
-
-  <section class="band" id="benchmark">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="row flip">
-        <div class="row-text" data-reveal>
-          <span class="ico"><canvas data-icon="bars"></canvas></span>
-          <h3>41% cheaper.<br>Same accuracy.</h3>
-          <p>On our own SWE-bench Lite run, 300 tasks with 5 attempts each, Suffice cut average cost per task from $0.27 to $0.16 and matched Opus on accuracy.<sup>1</sup></p>
-          <a class="link" href="https://suffice.work/method">Benchmark method →</a>
-        </div>
-        <div class="row-shot" data-reveal style="--d:100ms">
-          <div class="mock chart">
-            <div class="mock-head"><b>SWE-bench Lite</b><span>300 tasks × 5 attempts</span></div>
-            <div class="bars">
-              <div><div class="bar-label"><span>Opus</span><b>$0.27 / task</b></div><div class="bar"><i style="--w:100%"></i></div></div>
-              <div><div class="bar-label"><span>Suffice</span><b>$0.16 / task</b></div><div class="bar us"><i style="--w:59%"></i></div></div>
-            </div>
-            <div class="stats">
-              <div><small>Saved</small><b><span data-count="41">0</span>%</b></div>
-              <div><small>Suffice</small><b><span data-count="87.8" data-decimals="1">0</span>%</b></div>
-              <div><small>Opus</small><b><span data-count="87.6" data-decimals="1">0</span>%</b></div>
-              <div><small>Runs</small><b><span data-count="1500">0</span></b></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="hatch"></div>
-
-  <section class="band" id="snet">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="row">
-        <div class="row-text" data-reveal>
-          <span class="ico"><canvas data-icon="msgs"></canvas></span>
-          <h3>Works with the agents<br>you already run.</h3>
-          <p>SNet lets Claude Code, Codex, OpenCode and Suffice pass messages, context and handoffs, so you don't have to relay every update yourself. In our stress test, 1,200 messages went through with zero duplicates.</p>
-          <a class="link" href="#" data-link="docs">About SNet →</a>
-        </div>
-        <div class="row-shot" data-reveal style="--d:100ms">
-          <div class="mock" id="snetShot">
-            <div class="mock-head"><b>SNet · acme-api</b><span>3 agents</span></div>
+          <h3>The right model for every task.</h3>
+          <p>Suffice decides step by step, so you stop paying flagship prices to rename a variable.</p>
+        </article>
+        <article class="card px px-lg" data-reveal style="--d:100ms">
+          <div class="mock px" id="snetShot">
+            <div class="mock-head"><span>SNet · acme-api</span><span>3 agents</span></div>
             <div class="msgs">
-              <div class="msg"><div class="msg-from"><i style="background:#d9a07a"></i>Claude Code · api thread</div>Changed the session response shape. Types need regenerating.</div>
-              <div class="msg me"><div class="msg-from"><i style="background:var(--accent)"></i>Suffice</div>Types regenerated. Handing the test run to Codex.</div>
-              <div class="msg"><div class="msg-from"><i style="background:#85baff"></i>Codex · tests thread</div>42 of 42 passing. Ready for review.</div>
+              <div class="msg"><canvas data-sprite="#d9a07a"></canvas><div class="bubble px-sm px"><small>Claude Code · api thread</small>Changed the session response shape. Types need regenerating.</div></div>
+              <div class="msg me"><canvas data-sprite="#c8f05a"></canvas><div class="bubble px-sm px"><small>Suffice</small>Types regenerated. Handing the test run to Codex.</div></div>
+              <div class="msg"><canvas data-sprite="#85baff"></canvas><div class="bubble px-sm px"><small>Codex · tests thread</small>42 of 42 passing. Ready for review.</div></div>
             </div>
           </div>
-        </div>
+          <h3>Works with the agents you already run.</h3>
+          <p>SNet passes messages, context and handoffs between Claude Code, Codex, OpenCode and Suffice. 1,200 messages in our stress test, zero duplicates.</p>
+        </article>
+      </div>
+      <div class="trio">
+        <div class="mini px" data-reveal><span class="qicon px"><canvas data-icon="key"></canvas></span><div><h3>Bring your own key.</h3><p>Pay your provider directly. No markup on tokens.</p></div></div>
+        <div class="mini px" data-reveal style="--d:80ms"><span class="qicon px"><canvas data-icon="laptop"></canvas></span><div><h3>Runs on your machine.</h3><p>Code only goes to the provider you pick.</p></div></div>
+        <div class="mini px" data-reveal style="--d:160ms"><span class="qicon px"><canvas data-icon="receipt"></canvas></span><div><h3>A receipt every time.</h3><p>Cost, time and test results for each task.</p></div></div>
       </div>
     </div>
   </section>
 
-  <div class="hatch"></div>
-
-  <section class="band">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="sec-head" data-reveal>
-        <h2>What's next.</h2>
-        <p>Suffice is starting with the desktop agent. Here's what's coming after.</p>
+  <section class="section" id="next">
+    <div class="container">
+      <div class="head" data-reveal>
+        <span class="label">04 · Roadmap</span>
+        <h2>Next unlocks.</h2>
+        <p>The desktop agent is level one. Here's what comes after.</p>
       </div>
-      <div class="cells" data-reveal>
-        <div class="cell"><span class="status"><i style="background:var(--warn)"></i>EARLY ACCESS</span><h3>Suffice Pressure</h3><p>Finds the edge cases your tests miss and turns each one into a test you can rerun.</p></div>
-        <div class="cell"><span class="status"><i style="background:#555"></i>PLANNED</span><h3>Suffice Cloud</h3><p>Throwaway sandboxes with checkpoints and snapshots, for agents and the apps they build.</p></div>
-        <div class="cell"><span class="status"><i style="background:#555"></i>PLANNED</span><h3>Suffice Pro</h3><p>Project memory across sessions, multi-agent orchestration, and every execution mode.</p></div>
+      <div class="levels">
+        <div class="level px" data-reveal>
+          <div class="level-top"><span class="lv">LVL 01</span><span class="qicon px"><canvas data-icon="unlock"></canvas></span></div>
+          <h3>Suffice Agent</h3><p>The desktop app and CLI, with routing, lean context and receipts.</p>
+          <span class="tag on">available</span>
+        </div>
+        <div class="level px" data-reveal style="--d:80ms">
+          <div class="level-top"><span class="lv">LVL 02</span><span class="qicon px"><canvas data-icon="key"></canvas></span></div>
+          <h3>Suffice Pressure</h3><p>Finds the edge cases your tests miss and turns each one into a test you can rerun.</p>
+          <span class="tag early">early access</span>
+        </div>
+        <div class="level px locked" data-reveal style="--d:160ms">
+          <div class="level-top"><span class="lv">LVL 03</span><span class="qicon px"><canvas data-icon="lock"></canvas></span></div>
+          <h3>Suffice Cloud</h3><p>Throwaway sandboxes with checkpoints and snapshots for agents and the apps they build.</p>
+          <span class="tag">locked</span>
+        </div>
+        <div class="level px locked" data-reveal style="--d:240ms">
+          <div class="level-top"><span class="lv">LVL 04</span><span class="qicon px"><canvas data-icon="lock"></canvas></span></div>
+          <h3>Suffice Pro</h3><p>Project memory across sessions, multi-agent orchestration and every execution mode.</p>
+          <span class="tag">locked</span>
+        </div>
       </div>
-      <div class="wait-row" data-reveal>
-        <p class="muted">Get an email when they open up.</p>
+      <div class="wait px" data-reveal>
+        <p>Get an email when the next level unlocks.</p>
         <form class="waitlist" novalidate>
-          <input type="email" name="email" placeholder="you@company.com" aria-label="Email address" required>
-          <button class="btn btn-white" type="submit">Join the waitlist</button>
+          <input class="px" type="email" name="email" placeholder="you@company.com" aria-label="Email address" required>
+          <button class="btn btn-lime px" type="submit">Join the waitlist</button>
         </form>
         <p class="waitlist-msg" aria-live="polite"></p>
       </div>
     </div>
   </section>
 
-  <div class="hatch"></div>
-
-  <section class="band">
-    <div class="inner">
-      <span class="x tl"></span><span class="x tr"></span>
-      <div class="faq-grid">
-      <div data-reveal>
-        <h2>A few things<br>you might be wondering.</h2>
-        <p>More in the <a class="u" href="#" data-link="docs">docs</a>, or <a class="u" href="#" data-email>get in touch</a>.</p>
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="head" data-reveal>
+        <span class="label">05 · FAQ</span>
+        <h2>Questions.</h2>
       </div>
-      <div class="faq" data-reveal style="--d:100ms">
-        <details><summary>What is Suffice?<i></i></summary><p>A desktop coding agent. You describe a feature, bug or refactor, and Suffice plans it, writes the code, runs it and tests it, choosing models along the way so you don't overpay.</p></details>
-        <details><summary>Is it free?<i></i></summary><p>Yes. The app is free with your own API key. Paid features will come later, and we'll announce pricing before anything changes.</p></details>
-        <details><summary>Can I use my existing API keys?<i></i></summary><p>Yes. Add a key from your provider and you're billed by them at their normal rates. Whatever Suffice saves shows up on your own bill.</p></details>
-        <details><summary>Do I have to stop using Claude Code or Codex?<i></i></summary><p>No. SNet, in beta, connects them to Suffice and to each other so they can share context and hand off work.</p></details>
-        <details><summary>Where does my code go?<i></i></summary><p>The agent runs on your computer. Code is only sent to the model provider you configure, under your key.</p></details>
-        <details><summary>How was the 41% measured?<i></i></summary><p>On our own run of SWE-bench Lite: 300 tasks, 5 attempts each, comparing Opus to Suffice (Golem). Average cost per task went from $0.27 to $0.16 with accuracy level. The full <a class="u" href="https://suffice.work/method">method</a> is public.</p></details>
-      </div>
+      <div class="faq" data-reveal>
+        <details class="px"><summary>What is Suffice?</summary><p>A desktop coding agent. You describe a feature, bug or refactor, and Suffice plans it, writes the code, runs it and tests it, choosing models along the way so you don't overpay.</p></details>
+        <details class="px"><summary>Is it free?</summary><p>Yes. The app is free with your own API key. Paid features will come later, and we'll announce pricing before anything changes.</p></details>
+        <details class="px"><summary>Can I use my existing API keys?</summary><p>Yes. Add a key from your provider and you're billed by them at their normal rates. Whatever Suffice saves shows up on your own bill.</p></details>
+        <details class="px"><summary>Do I have to stop using Claude Code or Codex?</summary><p>No. SNet, in beta, connects them to Suffice and to each other so they can share context and hand off work.</p></details>
+        <details class="px"><summary>Where does my code go?</summary><p>The agent runs on your computer. Code is only sent to the model provider you configure, under your key.</p></details>
+        <details class="px"><summary>How was the 41% measured?</summary><p>On our own run of SWE-bench Lite: 300 tasks, 5 attempts each, comparing Opus to Suffice (Golem). Average cost per task went from $0.27 to $0.16 with accuracy level. The full <a class="u" href="https://suffice.work/method">method</a> is public.</p></details>
       </div>
     </div>
   </section>
 
-  <section class="band cta">
-    <div class="inner" data-reveal>
-      <span class="x tl"></span><span class="x tr"></span>
+  <section class="scene" aria-label="Download Suffice">
+    <canvas id="ctaScene" data-scene="hill" aria-hidden="true"></canvas>
+    <div class="scene-panel px px-lg" data-reveal>
       <h2>Do more with enough.</h2>
       <p>Free on Windows, macOS and Linux.</p>
       <div class="actions">
-        <a href="download.html" class="btn btn-white" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
-        <a href="#" class="btn btn-grey" data-link="docs">Read the docs</a>
+        <a href="download.html" class="btn btn-lime px" data-download><span data-os-icon></span><span data-download-label>Download Suffice</span></a>
+        <a href="#" class="btn btn-dark px" data-link="docs">Read the docs</a>
       </div>
     </div>
-    <canvas class="dissolve" id="dissolve" aria-hidden="true"></canvas>
   </section>
 </main>
 
 <footer class="footer">
-  <section class="band">
-    <div class="inner notes">
-      <span class="x tl"></span><span class="x tr"></span>
-      <p><sup>1</sup> From our own 5-attempt, 300-task SWE-bench Lite run comparing Opus to Suffice (Golem). Average cost per task: $0.16, down from $0.27 for Opus. Accuracy: 263.4/300 (87.8% average over 5 trials) vs 262.8/300 (87.6%).</p>
-      <p>SNet figure from an internal stress test between separate agent tools. Independent project, not affiliated with Anthropic or OpenAI.</p>
-    </div>
-  </section>
-  <section class="band">
-    <div class="inner footer-grid">
+  <div class="container">
+    <canvas class="wordmark" id="wordmark" aria-hidden="true"></canvas>
+    <div class="footer-grid">
       <div>
-        <a href="index.html" class="brand"><img src="logo.svg" alt="">Suffice</a>
+        <a href="index.html" class="brand"><img src="logo.svg" alt="">suffice</a>
         <p>Coding agents that know when it's enough.</p>
       </div>
       <div class="footer-col"><h4>Product</h4><a href="download.html">Download</a><a href="#benchmark">Benchmark</a><a href="download.html#changelog">Changelog</a></div>
       <div class="footer-col"><h4>Resources</h4><a href="#" data-link="docs">Documentation</a><a href="#" data-link="security">Security</a><a href="#" data-email>Contact</a></div>
       <div class="footer-col"><h4>Legal</h4><a href="#" data-link="privacy">Privacy</a><a href="#" data-link="terms">Terms</a><a href="#" data-link="eula">Software license</a></div>
     </div>
-  </section>
-  <div class="inner footer-bottom"><span>© <span data-year>2026</span> Suffice.</span><span>Built to be enough.</span></div>
+    <div class="notes">
+      <p><sup>1</sup> From our own 5-attempt, 300-task SWE-bench Lite run comparing Opus to Suffice (Golem). Average cost per task: $0.16, down from $0.27 for Opus. Accuracy: 263.4/300 (87.8% average over 5 trials) vs 262.8/300 (87.6%).</p>
+      <p>SNet figure from an internal stress test between separate agent tools. Independent project, not affiliated with Anthropic or OpenAI.</p>
+    </div>
+    <div class="footer-bottom"><span>© <span data-year>2026</span> Suffice.</span><span>Built to be enough.</span></div>
+  </div>
 </footer>
 
 <script src="main.js"></script>
